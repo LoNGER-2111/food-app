@@ -1,6 +1,6 @@
 import { getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { motion } from "framer-motion";
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { MdAdd, MdLogout, MdShoppingBasket } from "react-icons/md";
 import { Link } from "react-router-dom";
 import { actionType } from "../context/reducer";
@@ -15,7 +15,11 @@ const Header = () => {
 
   const [{ user }, dispatch] = useStateValue();
 
-  const [isMenu, setIsMenu] = useState(false);
+  const [isDeskMenu, setIsDeskMenu] = useState(false);
+  const [isMobileMenu, setIsMobileMenu] = useState(false);
+
+  const deskMenu = useRef();
+  const mobileMenu = useRef();
 
   const login = async () => {
     if (!user) {
@@ -30,12 +34,14 @@ const Header = () => {
 
       localStorage.setItem("user", JSON.stringify(providerData[0]));
     } else {
-      setIsMenu(!isMenu);
+      setIsDeskMenu((isDeskMenu) => !isDeskMenu);
+      setIsMobileMenu((isMobileMenu) => !isMobileMenu);
     }
   };
 
   const logout = () => {
-    setIsMenu(false);
+    setIsDeskMenu(false);
+    setIsMobileMenu(false);
     localStorage.clear();
 
     dispatch({
@@ -43,6 +49,34 @@ const Header = () => {
       user: null,
     });
   };
+
+  // Close menu when click outside on desktop
+  useEffect(() => {
+    const handler = (e) => {
+      if (!deskMenu.current?.contains(e.target)) {
+        setIsDeskMenu(false);
+      }
+    };
+    document.addEventListener("click", handler);
+
+    return () => {
+      document.removeEventListener("click", handler);
+    };
+  });
+
+  // Close menu when click outside on mobile
+  useEffect(() => {
+    const handler = (e) => {
+      if (!mobileMenu.current?.contains(e.target)) {
+        setIsMobileMenu(false);
+      }
+    };
+    document.addEventListener("click", handler);
+
+    return () => {
+      document.removeEventListener("click", handler);
+    };
+  });
 
   return (
     <header className="fixed z-50 w-screen bg-primary p-3 px-4 md:p-6 md:px-16">
@@ -61,7 +95,9 @@ const Header = () => {
             className="flex items-center gap-8"
           >
             <li className="cursor-pointer text-base text-textColor transition-all duration-100 ease-in-out hover:text-headingColor">
-              Home
+              <Link to={"/"} className="block w-full h-full">
+                Home
+              </Link>
             </li>
             <li className="cursor-pointer text-base text-textColor transition-all duration-100 ease-in-out hover:text-headingColor ">
               Menu
@@ -81,7 +117,7 @@ const Header = () => {
             </div>
           </div>
 
-          <div className="relative">
+          <div className="relative" ref={deskMenu}>
             <motion.img
               whileTap={{ scale: 0.9 }}
               src={user ? user.photoURL : Avatar}
@@ -89,14 +125,14 @@ const Header = () => {
               alt="userprofile"
               onClick={login}
             />
-            {isMenu && (
+            {isDeskMenu && (
               <motion.div
                 initial={{ opacity: 0, scale: 0.6 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.6 }}
                 className="absolute top-12 right-0 flex w-40 flex-col overflow-hidden rounded-lg bg-gray-50 shadow-xl"
               >
-                <Link to={"/createItem"} onClick={() => setIsMenu(false)}>
+                <Link to={"/createItem"} onClick={() => setIsDeskMenu(false)}>
                   <p className="flex cursor-pointer items-center gap-3 px-4 py-2 text-base text-textColor transition-all duration-100 ease-in-out hover:bg-slate-100">
                     New Item <MdAdd />
                   </p>
@@ -127,7 +163,7 @@ const Header = () => {
           <p className="text-xl font-bold text-headingColor">City</p>
         </Link>
 
-        <div className="relative">
+        <div className="relative" ref={mobileMenu}>
           <motion.img
             whileTap={{ scale: 0.9 }}
             src={user ? user.photoURL : Avatar}
@@ -135,14 +171,14 @@ const Header = () => {
             alt="userprofile"
             onClick={login}
           />
-          {isMenu && (
+          {isMobileMenu && (
             <motion.div
               initial={{ opacity: 0, scale: 0.6 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.6 }}
               className="absolute top-12 right-0 flex w-40 flex-col overflow-hidden rounded-lg bg-gray-50 shadow-xl"
             >
-              <Link to={"/createItem"} onClick={() => setIsMenu(false)}>
+              <Link to={"/createItem"} onClick={() => setIsMobileMenu(false)}>
                 <p className="flex cursor-pointer items-center gap-3 px-4 py-2 text-base text-textColor transition-all duration-100 ease-in-out hover:bg-slate-100">
                   New Item <MdAdd />
                 </p>
@@ -155,26 +191,28 @@ const Header = () => {
                 className="flex flex-col"
               >
                 <li
-                  className="cursor-pointer px-4 py-2 text-base text-textColor transition-all duration-100 ease-in-out hover:bg-slate-100 hover:text-headingColor "
-                  onClick={() => setIsMenu(false)}
+                  className="cursor-pointer text-base text-textColor transition-all duration-100 ease-in-out hover:bg-slate-100 hover:text-headingColor "
+                  onClick={() => setIsMobileMenu(false)}
                 >
-                  Home
+                  <Link to={"/"} className="block w-full h-full px-4 py-2">
+                    Home
+                  </Link>
                 </li>
                 <li
                   className="cursor-pointer px-4 py-2 text-base text-textColor transition-all duration-100 ease-in-out hover:bg-slate-100 hover:text-headingColor "
-                  onClick={() => setIsMenu(false)}
+                  onClick={() => setIsMobileMenu(false)}
                 >
                   Menu
                 </li>
                 <li
                   className="cursor-pointer px-4 py-2 text-base text-textColor transition-all duration-100 ease-in-out hover:bg-slate-100 hover:text-headingColor "
-                  onClick={() => setIsMenu(false)}
+                  onClick={() => setIsMobileMenu(false)}
                 >
                   About Us
                 </li>
                 <li
                   className="cursor-pointer px-4 py-2 text-base text-textColor transition-all duration-100 ease-in-out hover:bg-slate-100 hover:text-headingColor "
-                  onClick={() => setIsMenu(false)}
+                  onClick={() => setIsMobileMenu(false)}
                 >
                   Service
                 </li>
