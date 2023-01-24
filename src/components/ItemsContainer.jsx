@@ -9,9 +9,20 @@ import { ItemsLoader } from "./Preloaders";
 const ItemsContainer = ({ scrollable, data, scrollValue }) => {
   const rowContainerRef = useRef();
 
+  const [{ cartItems }, dispatch] = useStateValue();
+
   useEffect(() => {
     rowContainerRef.current.scrollLeft += scrollValue;
   });
+
+  const addToCart = (item) => {
+    dispatch({
+      type: actionType.SET_CART_ITEMS,
+      cartItems: [...cartItems, item],
+    });
+
+    localStorage.setItem("cartItems", JSON.stringify([...cartItems, item]));
+  };
 
   return (
     <div
@@ -53,6 +64,7 @@ const ItemsContainer = ({ scrollable, data, scrollValue }) => {
               <motion.div
                 whileTap={{ scale: 0.8 }}
                 className="w-8 h-8 rounded-full bg-red-600 flex items-center justify-center cursor-pointer hover:shadow-md"
+                onClick={() => addToCart(item)}
               >
                 <MdShoppingBasket className="text-white" />
               </motion.div>
