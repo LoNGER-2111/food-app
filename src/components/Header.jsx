@@ -13,7 +13,7 @@ const Header = () => {
   const firebaseAuth = getAuth(app);
   const provider = new GoogleAuthProvider();
 
-  const [{ user }, dispatch] = useStateValue();
+  const [{ user, showCart }, dispatch] = useStateValue();
 
   const [isDeskMenu, setIsDeskMenu] = useState(false);
   const [isMobileMenu, setIsMobileMenu] = useState(false);
@@ -50,6 +50,13 @@ const Header = () => {
     });
   };
 
+  const showCartContainer = () => {
+    dispatch({
+      type: actionType.SET_SHOW_CART,
+      showCart: !showCart,
+    });
+  };
+
   // Close menu when click outside on desktop
   useEffect(() => {
     const handler = (e) => {
@@ -79,7 +86,7 @@ const Header = () => {
   });
 
   return (
-    <header className="fixed z-50 w-screen bg-primary p-3 px-4 md:p-6 md:px-16">
+    <header className="fixed z-30 w-screen bg-primary p-3 px-4 md:p-6 md:px-16">
       {/* desktop & tablet */}
       <div className="hidden h-full w-full items-center justify-between md:flex">
         <Link to={"/"} className="flex items-center gap-2">
@@ -110,7 +117,10 @@ const Header = () => {
             </li>
           </motion.ul>
 
-          <div className="relative flex items-center justify-center">
+          <div
+            className="relative flex items-center justify-center"
+            onClick={showCartContainer}
+          >
             <MdShoppingBasket className="cursor-pointer text-2xl text-textColor" />
             <div className="absolute -top-2 -right-2 flex h-5 w-5 items-center justify-center rounded-full bg-cartNumBg">
               <div className="text-xs font-semibold text-white">2</div>
@@ -151,7 +161,10 @@ const Header = () => {
 
       {/* mobile */}
       <div className="flex h-full w-full items-center justify-between md:hidden">
-        <div className="relative flex items-center justify-center">
+        <div
+          className="relative flex items-center justify-center"
+          onClick={showCartContainer}
+        >
           <MdShoppingBasket className="cursor-pointer text-2xl text-textColor" />
           <div className="absolute -top-2 -right-2 flex h-5 w-5 items-center justify-center rounded-full bg-cartNumBg">
             <div className="text-xs font-semibold text-white">2</div>

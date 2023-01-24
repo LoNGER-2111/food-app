@@ -1,6 +1,6 @@
 import React from "react";
 
-const Loader = () => {
+export const SpinLoader = () => {
   return (
     <div role="status">
       <svg
@@ -24,4 +24,33 @@ const Loader = () => {
   );
 };
 
-export default Loader;
+export const ItemsLoader = ({ scrollable }) => {
+  const loadersAmount = (n) => {
+    let array = [];
+    for (let i = 0; i < n; i++) array.push(i);
+    return array;
+  };
+
+  return (
+    <>
+      {loadersAmount(8).map((numb) => (
+        <div
+          key={numb}
+          className={`min-w-[275px] h-[175px] md:min-w-[300px] ${
+            scrollable ? "my-12" : "my-6"
+          } bg-card rounded-lg py-2 px-4 backdrop-blur-lg hover:drop-shadow-lg scroll-mx-1 snap-start flex flex-col items-center justify-center`}
+        >
+          <div className="w-full h-1/2 flex items-center justify-between">
+            <div className="w-1/2 h-full bg-gray-200 rounded-md"></div>
+            <div className="w-8 h-8 rounded-full bg-gray-200"></div>
+          </div>
+          <div className="w-full h-1/2 flex flex-col items-end justify-end gap-1">
+            <div className="w-2/3 h-7 bg-gray-200 rounded-md"></div>
+            <div className="w-1/3 h-4 bg-gray-200 rounded-md"></div>
+            <div className="w-1/4 h-5 bg-gray-200 rounded-md"></div>
+          </div>
+        </div>
+      ))}
+    </>
+  );
+};

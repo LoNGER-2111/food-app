@@ -18,7 +18,7 @@ import { useStateValue } from "../context/StateProvider";
 import { storage } from "../firebase.config";
 import { categories } from "../utils/data";
 import { getAllFoodItems, saveItem } from "../utils/firebaseFunctions";
-import Loader from "./Loader";
+import { SpinLoader } from "./Preloaders";
 
 const UploadContainer = () => {
   const [title, setTitle] = useState("");
@@ -209,13 +209,16 @@ const UploadContainer = () => {
           </select>
         </div>
 
-        <div className="group flex justify-center items-center flex-col border-2 border-dotted border-gray-300 w-full h-225 md:h-340 cursor-pointer rounded-lg">
-          <div className="w-full h-1 fixed bottom-0 flex justify-start">
-            <div className="w-0 h-full bg-emerald-400" id="progress-bar"></div>
+        <div className="flex justify-center items-center flex-col border-2 border-dotted border-gray-300 w-full h-225 md:h-340 cursor-pointer rounded-lg">
+          <div className="w-full h-[6px] fixed bottom-0 lg:-ml-[17px] flex justify-start rounded-md">
+            <div
+              className="w-0 h-full bg-emerald-400 rounded-md"
+              id="progress-bar"
+            ></div>
           </div>
 
           {isLoading ? (
-            <Loader />
+            <SpinLoader />
           ) : (
             <>
               {!imageAsset ? (

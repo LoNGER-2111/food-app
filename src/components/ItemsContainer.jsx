@@ -1,8 +1,12 @@
+import { motion } from "framer-motion";
 import React, { useEffect, useRef } from "react";
 import { MdShoppingBasket } from "react-icons/md";
-import { motion } from "framer-motion";
+import { actionType } from "../context/reducer";
+import { useStateValue } from "../context/StateProvider";
+import NotFoundImg from "../img/NotFound.svg";
+import { ItemsLoader } from "./Preloaders";
 
-const RowContainer = ({ scrollable, data, scrollValue }) => {
+const ItemsContainer = ({ scrollable, data, scrollValue }) => {
   const rowContainerRef = useRef();
 
   useEffect(() => {
@@ -12,23 +16,28 @@ const RowContainer = ({ scrollable, data, scrollValue }) => {
   return (
     <div
       ref={rowContainerRef}
-      className={`w-full my-12 flex items-center gap-3 ${
+      className={`w-full my-8 flex items-center gap-3 ${
         scrollable
           ? "overflow-x-scroll scrollbar-hide scroll-smooth whitespace-nowrap snap-x snap-mandatory"
           : "overflow-x-hidden flex-wrap justify-center"
       }`}
     >
-      {data &&
+      {!data ? (
+        <ItemsLoader scrollable={scrollable} />
+      ) : data.length > 0 ? (
         data.map((item) => (
           <div
             key={item?.id}
             onClick={(e) =>
-              e.target
-                .closest("#fruit-item")
-                .scrollIntoView({ behavior: "smooth" })
+              e.target.closest(`#food-item-${item.id}`).scrollIntoView({
+                behavior: "smooth",
+                block: "center",
+              })
             }
-            id="fruit-item"
-            className="min-w-[275px] h-[175px] md:min-w-[300px] my-12 bg-card rounded-lg py-2 px-4 backdrop-blur-lg hover:drop-shadow-lg flex flex-col items-center justify-center scroll-mx-1 snap-start"
+            id={`food-item-${item.id}`}
+            className={`min-w-[275px] h-[175px] md:min-w-[300px] ${
+              scrollable ? "my-12" : "my-6"
+            } bg-card rounded-lg py-2 px-4 backdrop-blur-lg hover:drop-shadow-lg flex flex-col items-center justify-center scroll-mx-1 snap-start`}
           >
             <div className="w-full flex items-center justify-between -mt-8">
               <motion.div
@@ -63,9 +72,17 @@ const RowContainer = ({ scrollable, data, scrollValue }) => {
               </div>
             </div>
           </div>
-        ))}
+        ))
+      ) : (
+        <div className="w-full flex flex-col items-center justify-center">
+          <img src={NotFoundImg} className="h-340" alt="Not Found" />
+          <p className="text-xl text-headingColor font-semibold my-2">
+            Items not available
+          </p>
+        </div>
+      )}
     </div>
   );
 };
 
-export default RowContainer;
+export default ItemsContainer;
