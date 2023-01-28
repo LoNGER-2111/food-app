@@ -1,5 +1,6 @@
 import { fetchUser, fetchCart } from "../utils/fetchLocalStorageData";
 
+// Fetch info from localStorage
 const userInfo = fetchUser();
 const cartInfo = fetchCart();
 

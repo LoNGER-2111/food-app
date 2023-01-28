@@ -22,6 +22,7 @@ const FruitsContainer = () => {
             className="w-8 h-8 rounded-lg bg-orange-300 hover:bg-orange-500 cursor-pointer hover:shadow-lg flex items-center justify-center"
             onClick={() => {
               setScrollValue(-300);
+              // Re-render ItemsContainer to update scrollLeft
               setForceUpdate((prev) => prev - 1);
             }}
           >
@@ -32,6 +33,7 @@ const FruitsContainer = () => {
             className="w-8 h-8 rounded-lg bg-orange-300 hover:bg-orange-500 cursor-pointer hover:shadow-lg flex items-center justify-center"
             onClick={() => {
               setScrollValue(300);
+              // Re-render ItemsContainer to update scrollLeft
               setForceUpdate((prev) => prev + 1);
             }}
           >

@@ -29,6 +29,7 @@ const CartContainer = () => {
 
     localStorage.setItem("cartItems", JSON.stringify([]));
 
+    // Reset qty property of cart items
     cartItems.forEach((cartItem) => (cartItem.qty = 1));
   };
 

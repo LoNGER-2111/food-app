@@ -20,6 +20,7 @@ const ItemsContainer = ({ scrollable, data, scrollValue }) => {
   };
 
   const addToCart = (item) => {
+    // Handle adding existed item to cart
     if (isItemExisted(item)) {
       cartItems.forEach((cartItem) => {
         if (cartItem.id === item.id) {

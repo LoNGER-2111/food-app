@@ -88,6 +88,7 @@ const Header = () => {
     };
   });
 
+  // Display total items in the shopping basket
   useEffect(() => {
     let totalItems = cartItems.reduce((accumulator, cartItem) => {
       return accumulator + cartItem.qty;

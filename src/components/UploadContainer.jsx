@@ -44,10 +44,13 @@ const UploadContainer = () => {
     uploadTask.on(
       "state_changed",
       (snapshot) => {
+        // Display progress bar when upload image
         const progress =
           (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
         progressBar.style.width = `${progress}%`;
         if (progress === 100) progressBar.style.width = 0;
+
+        // Handle upload state
         switch (snapshot.state) {
           case "paused":
             console.log("Upload is paused");
@@ -68,6 +71,7 @@ const UploadContainer = () => {
           setIsLoading(false);
         }, 4000);
       },
+      // Handle when uploaded successfully
       () => {
         getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
           setImageAsset(downloadURL);
@@ -124,8 +128,8 @@ const UploadContainer = () => {
         setMsg("Data uploaded successfully 😊");
         setAlertStatus("success");
         clearDataAfterUpload();
-
-        fetchData();
+        // Update food data after uploading item
+        updateData();
       }
     } catch (error) {
       console.log(error);
@@ -146,7 +150,7 @@ const UploadContainer = () => {
     setCategory("default");
   };
 
-  const fetchData = async () => {
+  const updateData = async () => {
     await getAllFoodItems().then((data) => {
       dispatch({
         type: actionType.SET_FOOD_ITEMS,

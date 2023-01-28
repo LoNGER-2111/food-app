@@ -22,10 +22,12 @@ const CartItem = ({ cartItem }) => {
         if (item.id === itemId) {
           item.qty -= 1;
           if (item.qty === 0) {
+            // Delete cartItem when qty = 0
             cartItems.splice(
               cartItems.findIndex((item) => item.qty === 0),
               1
             );
+            // Reset qty property of cartItem
             item.qty = 1;
           }
         }
