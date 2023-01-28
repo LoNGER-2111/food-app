@@ -7,26 +7,41 @@ import NotFoundImg from "../img/NotFound.svg";
 import { ItemsLoader } from "./Preloaders";
 
 const ItemsContainer = ({ scrollable, data, scrollValue }) => {
-  const rowContainerRef = useRef();
+  const itemsContainerRef = useRef();
 
   const [{ cartItems }, dispatch] = useStateValue();
 
   useEffect(() => {
-    rowContainerRef.current.scrollLeft += scrollValue;
+    itemsContainerRef.current.scrollLeft += scrollValue;
   });
 
+  const isItemExisted = (item) => {
+    return cartItems.find((cartItem) => cartItem.id === item.id);
+  };
+
   const addToCart = (item) => {
+    if (isItemExisted(item)) {
+      cartItems.forEach((cartItem) => {
+        if (cartItem.id === item.id) {
+          cartItem.qty += 1;
+        }
+      });
+    }
+
     dispatch({
       type: actionType.SET_CART_ITEMS,
-      cartItems: [...cartItems, item],
+      cartItems: isItemExisted(item) ? cartItems : [...cartItems, item],
     });
 
-    localStorage.setItem("cartItems", JSON.stringify([...cartItems, item]));
+    localStorage.setItem(
+      "cartItems",
+      JSON.stringify(isItemExisted(item) ? cartItems : [...cartItems, item])
+    );
   };
 
   return (
     <div
-      ref={rowContainerRef}
+      ref={itemsContainerRef}
       className={`w-full my-8 flex items-center gap-3 ${
         scrollable
           ? "overflow-x-scroll scrollbar-hide scroll-smooth whitespace-nowrap snap-x snap-mandatory"

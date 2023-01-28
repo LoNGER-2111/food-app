@@ -10,19 +10,22 @@ import Avatar from "../img/avatar.png";
 import Logo from "../img/logo.png";
 
 const Header = () => {
-  const firebaseAuth = getAuth(app);
-  const provider = new GoogleAuthProvider();
-
   const [{ user, showCart, cartItems }, dispatch] = useStateValue();
 
   const [isDeskMenu, setIsDeskMenu] = useState(false);
   const [isMobileMenu, setIsMobileMenu] = useState(false);
+  const [totalItems, setTotalItems] = useState(0);
 
   const deskMenu = useRef();
   const mobileMenu = useRef();
 
+  const cartItemsJson = JSON.stringify(cartItems);
+
   const login = async () => {
     if (!user) {
+      const firebaseAuth = getAuth(app);
+      const provider = new GoogleAuthProvider();
+
       const {
         user: { providerData },
       } = await signInWithPopup(firebaseAuth, provider);
@@ -85,6 +88,13 @@ const Header = () => {
     };
   });
 
+  useEffect(() => {
+    let totalItems = cartItems.reduce((accumulator, cartItem) => {
+      return accumulator + cartItem.qty;
+    }, 0);
+    setTotalItems(totalItems);
+  }, [cartItemsJson, cartItems]);
+
   return (
     <header className="fixed z-30 w-screen bg-primary p-3 px-4 md:p-6 md:px-16">
       {/* desktop & tablet */}
@@ -125,7 +135,7 @@ const Header = () => {
             {cartItems.length > 0 && (
               <div className="absolute -top-2 -right-2 flex h-5 w-5 items-center justify-center rounded-full bg-cartNumBg">
                 <div className="text-xs font-semibold text-white">
-                  {cartItems.length}
+                  {totalItems}
                 </div>
               </div>
             )}
@@ -173,7 +183,7 @@ const Header = () => {
           {cartItems.length > 0 && (
             <div className="absolute -top-2 -right-2 flex h-5 w-5 items-center justify-center rounded-full bg-cartNumBg">
               <div className="text-xs font-semibold text-white">
-                {cartItems.length}
+                {totalItems}
               </div>
             </div>
           )}

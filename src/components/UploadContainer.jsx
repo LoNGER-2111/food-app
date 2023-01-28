@@ -95,7 +95,13 @@ const UploadContainer = () => {
   const saveProduct = () => {
     setIsLoading(true);
     try {
-      if (!title || !category || !imageAsset || !calories || !price) {
+      if (
+        !title ||
+        category === "default" ||
+        !imageAsset ||
+        !calories ||
+        !price
+      ) {
         setNoti(true);
         setAlertStatus("danger");
         setMsg("Required fields can't be empty");

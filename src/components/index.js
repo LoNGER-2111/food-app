@@ -6,3 +6,4 @@ export { default as FruitsContainer } from "./FruitsContainer";
 export { default as ItemsContainer } from "./ItemsContainer";
 export { default as MenuContainer } from "./MenuContainer";
 export { default as CartContainer } from "./CartContainer";
+export { default as CartItem } from "./CartItem";
